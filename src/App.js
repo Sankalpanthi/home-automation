@@ -124,6 +124,19 @@ function App() {
 
   const login = (email, pass) => {
     // check if email id and pass are correct
+    // fetch("https://good-red-goshawk-wrap.cyclic.app/user/api", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "Accept": "application/json"
+    //   },
+    //   body: JSON.stringify({
+    //     email:"abcdfgh@gmail.com",
+    //     password:"12345"
+    //   })
+    // }) 
+    // .then(response => {console.log(response.text()[3])})
+    // .catch(error => {console.error(error)});
     fetch("https://good-red-goshawk-wrap.cyclic.app/user/api", {
       method: "POST",
       headers: {
@@ -131,13 +144,14 @@ function App() {
         "Accept": "application/json"
       },
       body: JSON.stringify({
-        email:"abcdfgh@gmail.com",
+        email:"abcd101@gmail.com",
         password:"12345"
       })
     }) 
-    .then(response => {console.log(response.text())})
-    .then(data => {console.log(data)})
+    .then(response => {console.log(response.json())})
+    .then(response => console.log(response))
     .catch(error => {console.error(error)});
+    
 
     // on successful login
     // const devices = [
