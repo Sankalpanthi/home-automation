@@ -14,6 +14,7 @@ export default function ContentDisplay({
   addDevice,
   login,
   register,
+  username,
 }) {
   const [change, setChange] = useState(-1); // for login/signup
 
@@ -34,7 +35,7 @@ export default function ContentDisplay({
         />
       );
     } else if (content.id === -3) {
-      return <Welcome />;
+      return <Welcome username={username} />;
     } else if (content.id === -4) {
       return <AddDevice addDevice={addDevice} />;
     } else if (content.type === 1) {

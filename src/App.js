@@ -26,13 +26,13 @@ function App() {
       id: -2,
     },
   ]);
-
-  let initContent = {
+  const initContent = {
     title: "Home",
     icon: <HomeIcon />,
     id: -1,
   };
   const [content, setContent] = useState(initContent);
+  const [username, setUsername] = useState("");
 
   const changeContent = (sideBarItem) => {
     if (sideBarItem.id === -5) {
@@ -122,125 +122,141 @@ function App() {
     }
   };
 
-  const login = (email, pass) => {
+  const login = async (email, pass) => {
     // check if email id and pass are correct
-    // fetch("https://good-red-goshawk-wrap.cyclic.app/user/api", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Accept": "application/json"
-    //   },
-    //   body: JSON.stringify({
-    //     email:"abcdfgh@gmail.com",
-    //     password:"12345"
-    //   })
-    // }) 
-    // .then(response => {console.log(response.text()[3])})
-    // .catch(error => {console.error(error)});
-    fetch("https://good-red-goshawk-wrap.cyclic.app/user/api", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        email:"abcd101@gmail.com",
-        password:"12345"
+    const check = await fetch(
+      "https://good-red-goshawk-wrap.cyclic.app/user/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "*/*",
+        },
+        body: JSON.stringify({
+          email: "sankalp@gmail.com",
+          password: "12345",
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
       })
-    }) 
-    .then(response => {console.log(response.json())})
-    .then(response => console.log(response))
-    .catch(error => {console.error(error)});
-    
-
-    // on successful login
-    // const devices = [
-    //   {
-    //     title: "Switch 1",
-    //     icon: <ToggleOnIcon />,
-    //     type: 1,
-    //     id: 243,
-    //     switch1: true,
-    //     switch2: false,
-    //     switch3: false,
-    //     switch4: true,
-    //   },
-    //   {
-    //     title: "Switch 2",
-    //     icon: <ToggleOnIcon />,
-    //     type: 1,
-    //     id: 245,
-    //     switch1: false,
-    //     switch2: false,
-    //     switch3: false,
-    //     switch4: true,
-    //   },
-    //   {
-    //     title: "Thermal 1",
-    //     icon: <DeviceThermostatIcon />,
-    //     type: 2,
-    //     id: 24,
-    //     temp: 30,
-    //   },
-    //   {
-    //     title: "Thermal 2",
-    //     icon: <DeviceThermostatIcon />,
-    //     type: 2,
-    //     id: 23,
-    //     temp: 69,
-    //   },
-    // ];
-    // setSideBarItems([
-    //   {
-    //     title: "Welcome",
-    //     icon: <WavingHandIcon />,
-    //     id: -3,
-    //   },
-    //   ...devices,
-    //   {
-    //     title: "Add Device",
-    //     icon: <AddCircleOutlineIcon />,
-    //     id: -4,
-    //   },
-    //   {
-    //     title: "Logout",
-    //     icon: <LogoutIcon />,
-    //     id: -5,
-    //   },
-    // ]);
-    // setContent({
-    //   title: "Welcome",
-    //   icon: <WavingHandIcon />,
-    //   id: -3,
-    // });
+      .catch((error) => {
+        console.error(error);
+      });
+    console.log(check);
+    // on unsuccessful login
+    if (check.output != undefined) {
+      alert(check.output);
+    } else {
+      // on successful login
+      setUsername(check.name);
+      let devices = [];
+      for (var i = 0; i < check.multi_device.length; i++) {
+        devices.push({
+          title: "Switch " + i,
+          icon: <ToggleOnIcon />,
+          type: 1,
+          id: check.multi_device[i],
+          switch1: true,
+          switch2: false,
+          switch3: false,
+          switch4: true,
+        });
+      }
+      for (var i = 0; i < check.single_device.length; i++) {
+        devices.push({
+          title: "Thermal " + i,
+          icon: <DeviceThermostatIcon />,
+          type: 2,
+          id: check.single_device[i],
+          temp: 30,
+        });
+      }
+      setSideBarItems([
+        {
+          title: "Welcome",
+          icon: <WavingHandIcon />,
+          id: -3,
+        },
+        ...devices,
+        {
+          title: "Add Device",
+          icon: <AddCircleOutlineIcon />,
+          id: -4,
+        },
+        {
+          title: "Logout",
+          icon: <LogoutIcon />,
+          id: -5,
+        },
+      ]);
+      setContent({
+        title: "Welcome",
+        icon: <WavingHandIcon />,
+        id: -3,
+      });
+    }
   };
 
-  const register = (name, email, pass) => {
+  const register = async (name, email, pass) => {
     // check if email isn't already in use
-
-    // on successful registration
-    setSideBarItems([
+    const check = await fetch(
+      "https://good-red-goshawk-wrap.cyclic.app/user/api",
       {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "*/*",
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          password: pass,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.output === "user added to db") {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    // on unsuccessful registration
+    if (!check) {
+      alert("Email already present!");
+    } else {
+      // on successful registration
+      setUsername(name);
+      setSideBarItems([
+        {
+          title: "Welcome",
+          icon: <HomeIcon />,
+          id: -3,
+        },
+        {
+          title: "Add Device",
+          icon: <AddCircleOutlineIcon />,
+          id: -4,
+        },
+        {
+          title: "Logout",
+          icon: <LogoutIcon />,
+          id: -5,
+        },
+      ]);
+      setContent({
         title: "Welcome",
-        icon: <HomeIcon />,
+        icon: <WavingHandIcon />,
         id: -3,
-      },
-      {
-        title: "Add Device",
-        icon: <AddCircleOutlineIcon />,
-        id: -4,
-      },
-      {
-        title: "Logout",
-        icon: <LogoutIcon />,
-        id: -5,
-      },
-    ]);
-    setContent({
-      title: "Welcome",
-      icon: <WavingHandIcon />,
-      id: -3,
-    });
+      });
+    }
   };
 
   return (
@@ -258,6 +274,7 @@ function App() {
         addDevice={addDevice}
         login={login}
         register={register}
+        username={username}
       />
     </div>
   );

@@ -1,10 +1,10 @@
 import React from "react";
 import "../App.css";
 
-export default function Welcome() {
+export default function Welcome({ username }) {
   return (
     <div className="container">
-      <h1 className="heading">Welcome!</h1>
+      <h1 className="heading">Welcome {username}!</h1>
       <div className="home">
         <p>Welcome to our Home Automation website!</p>
         <p>
