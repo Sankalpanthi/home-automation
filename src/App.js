@@ -134,9 +134,10 @@ function App() {
         email:"abcdfgh@gmail.com",
         password:"12345"
       })
-    }) .then(response => response.json())
-    .then(data => console.log("data"))
-    .catch(error => console.error(error));
+    }) 
+    .then(response => {console.log(response.text())})
+    .then(data => {console.log(data)})
+    .catch(error => {console.error(error)});
 
     // on successful login
     // const devices = [
