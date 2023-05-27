@@ -260,7 +260,13 @@ label {
     width: 50px;
   }
   .logo-img{
-    display: none;
+    width: 100%;
+    height: 70px;
+    margin-left: 0;
+    margin-right: 0;
+    object-fit: cover;
+    object-position: 0; 
+    border: 0;
   }
   .sidebar .list .row #title{
     display: none;
@@ -269,24 +275,20 @@ label {
   .right-side{
     margin-left: 50px;
   }
+  .home{
+    width: 100%;
+  }
   .home-col{
     flex-basis: 100%;
   }
-
-  .ls-container .cover{
-    display: none;
+  .ls-btn {
+    margin: 0 10px;
   }
-  .form-content .login-form,
-  .form-content .signup-form{
-    width: 100%;
+  .col-25 {
+    width: 30%;
   }
-  .form-content .signup-form{
-    display: none;
+  .col-75 {
+    float: right;
+    width: 70%;
   }
-  .ls-container #flip:checked ~ .forms .signup-form{
-    display: block;
-  }
-  .ls-container #flip:checked ~ .forms .login-form{
-    display: none;
-  }
-} 
+}
