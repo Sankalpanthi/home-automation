@@ -6,6 +6,7 @@ import MotionSensor from "./MotionSensor";
 import AddDevice from "./AddDevice";
 import LoginSignup from "./LoginSignup";
 import Welcome from "./Welcome";
+import "../App.css";
 
 export default function ContentDisplay({
   content,
@@ -55,5 +56,5 @@ export default function ContentDisplay({
       return <></>;
     }
   }
-  return <div style={{ marginLeft: "250px" }}>{callSpecific()}</div>;
+  return <div className="right-side">{callSpecific()}</div>;
 }

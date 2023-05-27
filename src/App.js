@@ -153,7 +153,7 @@ function App() {
         },
         body: JSON.stringify({
           email: email,
-          password: "12345",
+          password: pass,
         }),
       }
     )

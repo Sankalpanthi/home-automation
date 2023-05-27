@@ -97,10 +97,9 @@ p{
 
 /* Right Side Content CSS */
 
-/* .right-content{
-  overflow: "hidden";
-  margin-left: "250px";
-} */
+.right-side{
+  margin-left: 250px;
+}
 
 .container {
   border-radius: 5px;
@@ -253,3 +252,41 @@ label {
   display: table;
   clear: both;
 }
+
+
+@media (max-width: 730px) {
+  /* Sidebar */
+  .sidebar {
+    width: 50px;
+  }
+  .logo-img{
+    display: none;
+  }
+  .sidebar .list .row #title{
+    display: none;
+  }
+  /* Right Side Content CSS */
+  .right-side{
+    margin-left: 50px;
+  }
+  .home-col{
+    flex-basis: 100%;
+  }
+
+  .ls-container .cover{
+    display: none;
+  }
+  .form-content .login-form,
+  .form-content .signup-form{
+    width: 100%;
+  }
+  .form-content .signup-form{
+    display: none;
+  }
+  .ls-container #flip:checked ~ .forms .signup-form{
+    display: block;
+  }
+  .ls-container #flip:checked ~ .forms .login-form{
+    display: none;
+  }
+} 
