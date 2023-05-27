@@ -15,6 +15,7 @@ import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import React, { useEffect, useState } from "react";
 
 function App() {
+  var device_no = [1, 1, 1];
   const [sideBarItems, setSideBarItems] = useState([
     {
       title: "Home",
@@ -57,14 +58,42 @@ function App() {
       setContent(sideBarItem);
     }
   };
-
-  const onDelete = (content) => {
-    setSideBarItems(
-      sideBarItems.filter((e) => {
-        return e !== content;
+  const onDelete = async (content) => {
+    const data = await fetch(
+      "https://sarthak-testing-render.onrender.com/user/device/delete",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "*/*",
+        },
+        body: JSON.stringify({
+          token: localStorage.getItem("token"),
+          username: content.username,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
       })
-    );
-    setContent(sideBarItems[0]);
+      .catch((error) => {
+        console.error(error);
+      });
+    console.log(data);
+    if (data.output !== "esp deleted to db") {
+      alert(data.output);
+    } else {
+      let temp = [];
+      let i;
+      for (i = 0; i < sideBarItems.length; i++) {
+        if (sideBarItems[i].username !== content.username) {
+          temp.push(sideBarItems[i]);
+        }
+      }
+      setSideBarItems(temp);
+      setContent(sideBarItems[0]);
+    }
   };
 
   const addDevice = async (username, pass) => {
@@ -90,8 +119,9 @@ function App() {
       .catch((error) => {
         console.error(error);
       });
-    if (data != "device added to db") {
-      alert(data);
+    console.log(data);
+    if (data.output !== "esp added to db") {
+      alert(data.output);
     } else {
       const device_details = await fetch(
         "https://sarthak-testing-render.onrender.com/user/device",
@@ -115,14 +145,71 @@ function App() {
           console.error(error);
         });
       console.log(device_details);
+      let newDevices = [];
+      let i;
+      for (i = 1; i < sideBarItems.length - 2; i++) {
+        if (sideBarItems[i].type === 1) {
+          device_no[0] = Number(sideBarItems[i].title.split(" ").pop()) + 1;
+        } else if (sideBarItems[i].type === 2) {
+          device_no[1] = Number(sideBarItems[i].title.split(" ").pop()) + 1;
+        } else if (sideBarItems[i].type === 3) {
+          device_no[2] = Number(sideBarItems[i].title.split(" ").pop()) + 1;
+        }
+      }
+      if (device_details.type === 1) {
+        newDevices.push(
+          {
+            title: "Switch " + device_no[0]++,
+            icon: <ToggleOnIcon />,
+            type: 1,
+            switch1: device_details.status_1,
+            switch2: device_details.status_2,
+            switch3: device_details.status_3,
+            switch4: device_details.status_4,
+            username: username,
+            output: device_details.output,
+          },
+          {
+            title: "Temperature Sensor " + device_no[1]++,
+            icon: <DeviceThermostatIcon />,
+            type: 2,
+            temp: device_details.status_temp,
+            hum: device_details.status_hum,
+            username: username,
+            output: device_details.output,
+          }
+        );
+      } else if (device_details.type === 2) {
+        newDevices.push(
+          {
+            title: "Switch " + device_no[0]++,
+            icon: <ToggleOnIcon />,
+            type: 1,
+            switch1: device_details.status_1,
+            switch2: device_details.status_2,
+            switch3: device_details.status_3,
+            switch4: device_details.status_4,
+            username: username,
+            output: device_details.output,
+          },
+          {
+            title: "Motion Sensor " + device_no[2]++,
+            icon: <DirectionsRunIcon />,
+            type: 3,
+            motion: device_details.status_motion,
+            username: username,
+            output: device_details.output,
+          }
+        );
+      }
+      let temp = sideBarItems;
+      temp.splice.apply(temp, [temp.length - 2, 0].concat(newDevices));
+      setSideBarItems(temp);
+      setContent(sideBarItems[sideBarItems.length - 4]);
     }
-    // let temp = sideBarItems;
-    // temp.splice(temp.length - 2, 0, newDevice);
-    // setSideBarItems(temp);
-    // setContent(sideBarItems[sideBarItems.length - 3]);
   };
 
-  const onToggle = (switch_number) => {
+  const onToggle = async (switch_number) => {
     if (switch_number === 1) {
       content.switch1 = !content.switch1;
     } else if (switch_number === 2) {
@@ -132,13 +219,39 @@ function App() {
     } else {
       content.switch4 = !content.switch4;
     }
-    let i;
-    for (i = 1; i < sideBarItems.length - 1; i++) {
-      if (sideBarItems[i].id === content.id) {
-        sideBarItems[i] = content;
-        break;
+    const data = await fetch(
+      "https://sarthak-testing-render.onrender.com/user/device",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "*/*",
+        },
+        body: JSON.stringify({
+          token: localStorage.getItem("token"),
+          username: content.username,
+          status_1: content.switch1,
+          status_2: content.switch2,
+          status_3: content.switch3,
+          status_4: content.switch4,
+        }),
       }
-    }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    console.log(data);
+    // let i;
+    // for (i = 1; i < sideBarItems.length - 1; i++) {
+    //   if (sideBarItems[i].username === content.username) {
+    //     sideBarItems[i] = content;
+    //     break;
+    //   }
+    // }
   };
 
   const login = async (email, pass) => {
@@ -172,7 +285,6 @@ function App() {
       // on successful login
       localStorage.setItem("token", data.token);
       setUsername("Sankalp");
-      console.log(data.device_status);
       let devices = [];
       for (var i = 0; i < data.device_status.length; i++) {
         const device_details = await fetch(
@@ -196,17 +308,48 @@ function App() {
           .catch((error) => {
             console.error(error);
           });
-        console.log(device_details);
-        // devices.push({
-        // title: "Switch " + (i + 1),
-        // icon: <ToggleOnIcon />,
-        // type: 1,
-        // id: "m" + check.multi_device[i],
-        // switch1: true,
-        // switch2: false,
-        // switch3: false,
-        // switch4: true,
-        // });
+        if (device_details.type === 1) {
+          devices.push({
+            title: "Switch " + device_no[0]++,
+            icon: <ToggleOnIcon />,
+            type: 1,
+            switch1: device_details.status_1,
+            switch2: device_details.status_2,
+            switch3: device_details.status_3,
+            switch4: device_details.status_4,
+            username: data.device_status[i],
+            output: device_details.output,
+          });
+          devices.push({
+            title: "Temperature Sensor " + device_no[1]++,
+            icon: <DeviceThermostatIcon />,
+            type: 2,
+            temp: device_details.status_temp,
+            hum: device_details.status_hum,
+            username: data.device_status[i],
+            output: device_details.output,
+          });
+        } else if (device_details.type === 2) {
+          devices.push({
+            title: "Switch " + device_no[0]++,
+            icon: <ToggleOnIcon />,
+            type: 1,
+            switch1: device_details.status_1,
+            switch2: device_details.status_2,
+            switch3: device_details.status_3,
+            switch4: device_details.status_4,
+            username: data.device_status[i],
+            output: device_details.output,
+          });
+          devices.push({
+            title: "Motion Sensor " + device_no[2]++,
+            icon: <DirectionsRunIcon />,
+            type: 3,
+            motion: device_details.status_motion,
+            username: data.device_status[i],
+            output: device_details.output,
+          });
+        }
       }
       setSideBarItems([
         {
@@ -215,37 +358,6 @@ function App() {
           id: -3,
         },
         ...devices,
-        {
-          title: "Switchboard 1",
-          icon: <ToggleOnIcon />,
-          type: 1,
-          id: 80,
-          switch1: true,
-          switch2: false,
-          switch3: false,
-          switch4: true,
-        },
-        {
-          title: "Temperature Sensor 1",
-          icon: <DeviceThermostatIcon />,
-          type: 2,
-          id: 88,
-          temp: 23,
-        },
-        {
-          title: "Temperature Sensor 2",
-          icon: <DeviceThermostatIcon />,
-          type: 2,
-          id: 84,
-          temp: 23,
-        },
-        {
-          title: "Motion Sensor 1",
-          icon: <DirectionsRunIcon />,
-          type: 3,
-          id: 43,
-          temp: 23,
-        },
         {
           title: "Add Device",
           icon: <AddCircleOutlineIcon />,
@@ -324,21 +436,19 @@ function App() {
     }
   };
 
-  // useEffect(() => {
-  //   const updateContent = () => {
-  //     console.log("content updated");
-  //   };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("Logs every minute");
+    }, 1000);
 
-  //   if (content.id > 0) {
-  //     updateContent();
-  //   }
-  // }, [content]);
+    return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+  }, []);
 
   return (
     <div className="App">
       <SideBar
         sideBarItems={sideBarItems}
-        id={content.id}
+        title={content.title}
         changeContent={changeContent}
       />
       <ContentDisplay

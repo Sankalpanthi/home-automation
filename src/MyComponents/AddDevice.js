@@ -23,8 +23,8 @@ export default function AddDevice({ addDevice }) {
           <div className="col-75">
             <input
               type="text"
-              maxLength="20"
-              placeholder="Max Limit 20 Characters"
+              maxLength="10"
+              placeholder="Max Limit 10 Characters"
               value={username}
               onChange={(e) => {
                 setUsername(e.target.value);
@@ -40,8 +40,11 @@ export default function AddDevice({ addDevice }) {
           </div>
           <div className="col-75">
             <input
-              type="number"
-              placeholder="Max Limit 20 Characters"
+              type="text"
+              maxLength="5"
+              pattern="\d{5}"
+              title="It is not a 5 digit otp"
+              placeholder="It should be of 5 digits"
               value={pass}
               onChange={(e) => {
                 setPass(e.target.value);

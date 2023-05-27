@@ -1,11 +1,11 @@
 import React from "react";
 import "../App.css";
 
-export default function SideBarItems({ sideBarItem, id, changeContent }) {
+export default function SideBarItems({ sideBarItem, title, changeContent }) {
   return (
     <li
       className="row"
-      id={id === sideBarItem.id ? "active" : ""}
+      id={title === sideBarItem.title ? "active" : ""}
       onClick={() => changeContent(sideBarItem)}
     >
       <div id="icon">{sideBarItem.icon}</div>

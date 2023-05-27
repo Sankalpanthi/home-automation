@@ -34,7 +34,8 @@ export default function SwitchBoard({ content, onToggle, onDelete }) {
   return (
     <div className="container">
       <h1 className="heading">SwitchBoard</h1>
-      <h2 className="heading2">Device Id: {content.id}</h2>
+      <h2 className="heading2">Esp Username: {content.username}</h2>
+      <h2 className="heading2">{content.output}</h2>
       <div className="switches">
         <div className="switch-col">
           <h2>

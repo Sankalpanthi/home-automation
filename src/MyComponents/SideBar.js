@@ -6,19 +6,19 @@ import SideBarItems from "./SideBarItems";
 export default function SideBar(props) {
   return (
     <div className="sidebar">
-      <a className="logo">
+      <div className="logo">
         <img
           src="/Images/home-automation-logo1.jpg"
           className="logo-img"
           alt="logo"
         />
-      </a>
+      </div>
       <ul className="list">
         {props.sideBarItems.map((sideBarItem, key) => {
           return (
             <SideBarItems
               sideBarItem={sideBarItem}
-              id={props.id}
+              title={props.title}
               changeContent={props.changeContent}
               key={key}
             />

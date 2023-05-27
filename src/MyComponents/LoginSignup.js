@@ -29,13 +29,11 @@ export default function LoginSignup({ login, register, change, switchChange }) {
     if (rpass !== rcpass) {
       alert("Password and Confirm Password do not match!");
     } else {
-      console.log(rname, remail, rpass, rcpass);
       register(rname, remail, rpass);
     }
   };
   const submitLogin = (e) => {
     e.preventDefault();
-    console.log(lemail, lpass);
     login(lemail, lpass);
   };
 
