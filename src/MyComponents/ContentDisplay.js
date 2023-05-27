@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Home from "./Home";
 import SwitchBoard from "./SwitchBoard";
 import TempSensor from "./TempSensor";
+import MotionSensor from "./MotionSensor";
 import AddDevice from "./AddDevice";
 import LoginSignup from "./LoginSignup";
 import Welcome from "./Welcome";
@@ -48,6 +49,8 @@ export default function ContentDisplay({
       );
     } else if (content.type === 2) {
       return <TempSensor content={content} onDelete={onDelete} />;
+    } else if (content.type === 3) {
+      return <MotionSensor content={content} onDelete={onDelete} />;
     } else {
       return <></>;
     }

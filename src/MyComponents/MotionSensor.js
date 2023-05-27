@@ -1,13 +1,12 @@
 import React from "react";
 import "../App.css";
 
-export default function TempSensor({ content, onDelete }) {
+export default function MotionSensor({ content, onDelete }) {
   return (
     <div className="container">
-      <h1 className="heading">TempSensor</h1>
+      <h1 className="heading">MotionSensor</h1>
       <h2 className="heading2">Device Id: {content.id}</h2>
-      <h2 className="heading2">The temperature is {content.temp}</h2>
-      <h2 className="heading2">The humidity is 33&deg</h2>
+      <h2 className="heading2">The motion is {content.temp} there.</h2>
       <button className="delete-btn" onClick={() => onDelete(content)}>
         Delete
       </button>

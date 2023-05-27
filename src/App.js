@@ -10,6 +10,7 @@ import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import WavingHandIcon from "@mui/icons-material/WavingHand";
+import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 
 import React, { useEffect, useState } from "react";
 
@@ -66,41 +67,59 @@ function App() {
     setContent(sideBarItems[0]);
   };
 
-  const addDevice = (type, name, id) => {
-    let newDevice;
-    if (type === 1) {
-      let s1 = false,
-        s2 = false,
-        s3 = false,
-        s4 = false;
-      newDevice = {
-        //jsx object
-        title: name,
-        icon: <ToggleOnIcon />,
-        type: 1,
-        id: id,
-        switch1: s1,
-        switch2: s2,
-        switch3: s3,
-        switch4: s4,
-      };
+  const addDevice = async (username, pass) => {
+    const data = await fetch(
+      "https://sarthak-testing-render.onrender.com/user/device/add",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "*/*",
+        },
+        body: JSON.stringify({
+          token: localStorage.getItem("token"),
+          username: username,
+          otp: pass,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    if (data != "device added to db") {
+      alert(data);
     } else {
-      let t = 0;
-      newDevice = {
-        //jsx object
-        title: name,
-        icon: <DeviceThermostatIcon />,
-        type: 2,
-        id: id,
-        temp: t,
-      };
+      const device_details = await fetch(
+        "https://sarthak-testing-render.onrender.com/user/device",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "*/*",
+          },
+          body: JSON.stringify({
+            token: localStorage.getItem("token"),
+            username: username,
+          }),
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          return data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      console.log(device_details);
     }
-    let temp = sideBarItems;
-    temp.splice(temp.length - 2, 0, newDevice);
-    setSideBarItems(temp);
-    setContent(sideBarItems[sideBarItems.length - 3]);
-
-    // localStorage.setItem("todos", JSON.stringify(todos));// doesn't work as setContent doesn't do the job that fast (useEffect has to be used)
+    // let temp = sideBarItems;
+    // temp.splice(temp.length - 2, 0, newDevice);
+    // setSideBarItems(temp);
+    // setContent(sideBarItems[sideBarItems.length - 3]);
   };
 
   const onToggle = (switch_number) => {
@@ -124,8 +143,8 @@ function App() {
 
   const login = async (email, pass) => {
     // check if email id and pass are correct
-    const check = await fetch(
-      "https://good-red-goshawk-wrap.cyclic.app/user/login",
+    const data = await fetch(
+      "https://sarthak-testing-render.onrender.com/user/login",
       {
         method: "POST",
         headers: {
@@ -133,7 +152,7 @@ function App() {
           Accept: "*/*",
         },
         body: JSON.stringify({
-          email: "sankalp@gmail.com",
+          email: email,
           password: "12345",
         }),
       }
@@ -145,34 +164,49 @@ function App() {
       .catch((error) => {
         console.error(error);
       });
-    console.log(check);
+    console.log(data);
     // on unsuccessful login
-    if (check.output != undefined) {
-      alert(check.output);
+    if (data.output !== undefined) {
+      alert(data.output);
     } else {
       // on successful login
-      setUsername(check.name);
+      localStorage.setItem("token", data.token);
+      setUsername("Sankalp");
+      console.log(data.device_status);
       let devices = [];
-      for (var i = 0; i < check.multi_device.length; i++) {
-        devices.push({
-          title: "Switch " + i,
-          icon: <ToggleOnIcon />,
-          type: 1,
-          id: check.multi_device[i],
-          switch1: true,
-          switch2: false,
-          switch3: false,
-          switch4: true,
-        });
-      }
-      for (var i = 0; i < check.single_device.length; i++) {
-        devices.push({
-          title: "Thermal " + i,
-          icon: <DeviceThermostatIcon />,
-          type: 2,
-          id: check.single_device[i],
-          temp: 30,
-        });
+      for (var i = 0; i < data.device_status.length; i++) {
+        const device_details = await fetch(
+          "https://sarthak-testing-render.onrender.com/user/device",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "*/*",
+            },
+            body: JSON.stringify({
+              token: localStorage.getItem("token"),
+              username: data.device_status[i],
+            }),
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            return data;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+        console.log(device_details);
+        // devices.push({
+        // title: "Switch " + (i + 1),
+        // icon: <ToggleOnIcon />,
+        // type: 1,
+        // id: "m" + check.multi_device[i],
+        // switch1: true,
+        // switch2: false,
+        // switch3: false,
+        // switch4: true,
+        // });
       }
       setSideBarItems([
         {
@@ -181,6 +215,37 @@ function App() {
           id: -3,
         },
         ...devices,
+        {
+          title: "Switchboard 1",
+          icon: <ToggleOnIcon />,
+          type: 1,
+          id: 80,
+          switch1: true,
+          switch2: false,
+          switch3: false,
+          switch4: true,
+        },
+        {
+          title: "Temperature Sensor 1",
+          icon: <DeviceThermostatIcon />,
+          type: 2,
+          id: 88,
+          temp: 23,
+        },
+        {
+          title: "Temperature Sensor 2",
+          icon: <DeviceThermostatIcon />,
+          type: 2,
+          id: 84,
+          temp: 23,
+        },
+        {
+          title: "Motion Sensor 1",
+          icon: <DirectionsRunIcon />,
+          type: 3,
+          id: 43,
+          temp: 23,
+        },
         {
           title: "Add Device",
           icon: <AddCircleOutlineIcon />,
@@ -203,7 +268,7 @@ function App() {
   const register = async (name, email, pass) => {
     // check if email isn't already in use
     const check = await fetch(
-      "https://good-red-goshawk-wrap.cyclic.app/user/api",
+      "https://sarthak-testing-render.onrender.com/user/register",
       {
         method: "POST",
         headers: {
@@ -258,6 +323,16 @@ function App() {
       });
     }
   };
+
+  // useEffect(() => {
+  //   const updateContent = () => {
+  //     console.log("content updated");
+  //   };
+
+  //   if (content.id > 0) {
+  //     updateContent();
+  //   }
+  // }, [content]);
 
   return (
     <div className="App">
