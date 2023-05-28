@@ -7,14 +7,20 @@ export default function SwitchBoard({ content, flag, onToggle, onDelete }) {
   const [checked2, setChecked2] = useState(content.switch2);
   const [checked3, setChecked3] = useState(content.switch3);
   const [checked4, setChecked4] = useState(content.switch4);
+  const [output, setOutput] = useState(content.output);
 
   useEffect(() => {
     const resetState = () => {
-      setChecked1(content.switch1);
-      setChecked2(content.switch2);
-      setChecked3(content.switch3);
-      setChecked4(content.switch4);
-      console.log("reset state of switchboard is called");
+      setOutput(content.output);
+      if (content.output === "esp is offline") {
+        document.getElementById("switches").style.pointerEvents = "none";
+      } else {
+        document.getElementById("switches").style.pointerEvents = "auto";
+        setChecked1(content.switch1);
+        setChecked2(content.switch2);
+        setChecked3(content.switch3);
+        setChecked4(content.switch4);
+      }
     };
     resetState();
   }, [content, flag]);
@@ -36,8 +42,8 @@ export default function SwitchBoard({ content, flag, onToggle, onDelete }) {
     <div className="container">
       <h1 className="heading">SwitchBoard</h1>
       <h2 className="heading2">Esp Username: {content.espusername}</h2>
-      <h2 className="heading2">{content.output}</h2>
-      <div className="switches">
+      <h2 className="heading2">{output}</h2>
+      <form id="switches">
         <div className="switch-col">
           <h2>
             Switch 1 value:{" "}
@@ -110,7 +116,7 @@ export default function SwitchBoard({ content, flag, onToggle, onDelete }) {
             />
           </h2>
         </div>
-      </div>
+      </form>
       <button className="delete-btn" onClick={() => onDelete(content)}>
         Delete
       </button>

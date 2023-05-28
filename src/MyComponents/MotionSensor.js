@@ -3,11 +3,11 @@ import "../App.css";
 
 export default function MotionSensor({ content, flag, onDelete }) {
   const [motion, setMotion] = useState(content.motion);
-
+  const [output, setOutput] = useState(content.output);
   useEffect(() => {
     const resetState = () => {
       setMotion(content.motion);
-      console.log("reset state of motion is called");
+      setOutput(content.output);
     };
     resetState();
   }, [content, flag]);
@@ -15,7 +15,7 @@ export default function MotionSensor({ content, flag, onDelete }) {
     <div className="container">
       <h1 className="heading">MotionSensor</h1>
       <h2 className="heading2">Esp Username: {content.espusername}</h2>
-      <h2 className="heading2">{content.output}</h2>
+      <h2 className="heading2">{output}</h2>
       {motion === 1 ? (
         <h2 className="heading2">Motion detected!</h2>
       ) : (

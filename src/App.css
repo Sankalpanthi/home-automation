@@ -141,7 +141,7 @@ p{
 
 /* SwitchBoard */
 
-.switches{
+#switches{
   width: 80%;
   margin: auto;
   text-align: center;

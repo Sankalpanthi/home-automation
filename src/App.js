@@ -298,7 +298,6 @@ function App() {
       .catch((error) => {
         console.error(error);
       });
-    console.log(data);
     // on unsuccessful login
     if (data.output !== undefined) {
       alert(data.output);
@@ -462,7 +461,6 @@ function App() {
   useEffect(() => {
     const interval = setInterval(async () => {
       if (content.espusername !== undefined) {
-        console.log("In 5sec");
         const device_details = await fetch(
           "https://sarthak-testing-render.onrender.com/user/device",
           {
@@ -484,7 +482,7 @@ function App() {
           .catch((error) => {
             console.error(error);
           });
-        // console.log("device detail:", device_details);
+        // console.log(device_details);
         if (device_details.error !== undefined) {
           alert("Your token has become inactive,logging you out!");
           setSideBarItems([
@@ -580,7 +578,7 @@ function App() {
           setFlag((flag) => flag + 1);
         }
       }
-    }, 5000);
+    }, 1000);
 
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
   }, [content]);
