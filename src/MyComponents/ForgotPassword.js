@@ -26,7 +26,6 @@ export default function ForgotPassword({ newPass }) {
       .catch((error) => {
         console.error(error);
       });
-    console.log(data);
     newPass(email);
     setEmail("");
   };

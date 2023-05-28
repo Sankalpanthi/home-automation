@@ -17,6 +17,7 @@ import React, { useEffect, useState } from "react";
 
 function App() {
   var device_no = [1, 1, 1];
+  const [email, setEmail] = useState("");
   const [flag, setFlag] = useState(1);
   const [sideBarItems, setSideBarItems] = useState([
     {
@@ -85,14 +86,16 @@ function App() {
       .catch((error) => {
         console.error(error);
       });
-    console.log(data);
-    if (data.output !== "esp deleted to db") {
+    if (data.output !== "esp deleted succesfully ") {
       alert(data.output);
     } else {
       let temp = [];
       let i;
       for (i = 0; i < sideBarItems.length; i++) {
-        if (sideBarItems[i].espusername !== content.espusername) {
+        if (
+          sideBarItems[i].espusername === undefined ||
+          sideBarItems[i].espusername !== content.espusername
+        ) {
           temp.push(sideBarItems[i]);
         }
       }
@@ -583,10 +586,8 @@ function App() {
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
   }, [content]);
 
-  var email;
   // Forgot Password
-  const forgotPass = (local_email) => {
-    email = local_email;
+  const forgotPass = () => {
     setSideBarItems([
       {
         title: "Forgot Password",
@@ -602,7 +603,8 @@ function App() {
   };
 
   // New Password
-  const newPass = () => {
+  const newPass = (local_email) => {
+    setEmail(local_email);
     setSideBarItems([
       {
         title: "New Password",

@@ -40,7 +40,7 @@ export default function AddDevice({ addDevice }) {
           </div>
           <div className="col-75">
             <input
-              type="text"
+              type="password"
               maxLength="6"
               pattern="\d{6}"
               title="It is not a 6 digit otp"
