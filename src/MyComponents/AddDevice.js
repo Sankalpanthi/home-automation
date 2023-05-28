@@ -41,10 +41,10 @@ export default function AddDevice({ addDevice }) {
           <div className="col-75">
             <input
               type="text"
-              maxLength="5"
-              pattern="\d{5}"
-              title="It is not a 5 digit otp"
-              placeholder="It should be of 5 digits"
+              maxLength="6"
+              pattern="\d{6}"
+              title="It is not a 6 digit otp"
+              placeholder="It should be of 6 digits"
               value={pass}
               onChange={(e) => {
                 setPass(e.target.value);

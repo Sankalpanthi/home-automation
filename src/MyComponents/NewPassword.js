@@ -1,12 +1,35 @@
 import React, { useState } from "react";
 import "../App.css";
 
-export default function NewPassword({ homePage }) {
+export default function NewPassword({ homePage, email }) {
   const [otp, setOtp] = useState("");
   const [pass, setPass] = useState("");
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
+    const data = await fetch(
+      "https://sarthak-testing-render.onrender.com/mails/reset",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "*/*",
+        },
+        body: JSON.stringify({
+          email: email,
+          otp: otp,
+          password: pass,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    console.log(data);
     alert("New Password Set!");
     homePage();
     setOtp("");
@@ -16,7 +39,9 @@ export default function NewPassword({ homePage }) {
   return (
     <div className="container">
       <h1 className="heading">Enter opt and new password</h1>
-      <h2 className="heading2">Otp is sent to your mail! Check and enter!</h2>
+      <h2 className="heading2">
+        Otp has been sent to your email! Please check and enter!
+      </h2>
       <form onSubmit={submit}>
         <div className="row">
           <div className="col-25">
@@ -25,10 +50,10 @@ export default function NewPassword({ homePage }) {
           <div className="col-75">
             <input
               type="text"
-              maxLength="5"
-              pattern="\d{5}"
-              title="It is not a 5 digit otp"
-              placeholder="It should be of 5 digits"
+              maxLength="6"
+              pattern="\d{6}"
+              title="It is not a 6 digit otp"
+              placeholder="It should be of 6 digits"
               value={otp}
               onChange={(e) => {
                 setOtp(e.target.value);
@@ -59,7 +84,7 @@ export default function NewPassword({ homePage }) {
         </div>
         <br />
         <div className="row">
-          <input type="submit" className="add-btn" value="Add Device" />
+          <input type="submit" className="add-btn" value="Change Password" />
         </div>
       </form>
     </div>

@@ -4,8 +4,29 @@ import "../App.css";
 export default function ForgotPassword({ newPass }) {
   const [email, setEmail] = useState("");
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
+    const data = await fetch(
+      "https://sarthak-testing-render.onrender.com/mails/reset",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "*/*",
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    console.log(data);
     newPass(email);
     setEmail("");
   };
@@ -35,7 +56,7 @@ export default function ForgotPassword({ newPass }) {
           </div>
         </div>
         <div className="row">
-          <input type="submit" className="add-btn" value="Enter" />
+          <input type="submit" className="add-btn" value="Next" />
         </div>
       </form>
     </div>

@@ -125,7 +125,6 @@ function App() {
       .catch((error) => {
         console.error(error);
       });
-    console.log(data);
     if (data.output !== "esp added to db") {
       alert(data.output);
     } else {
@@ -298,13 +297,14 @@ function App() {
       .catch((error) => {
         console.error(error);
       });
+    console.log(data);
     // on unsuccessful login
     if (data.output !== undefined) {
       alert(data.output);
     } else {
       // on successful login
       localStorage.setItem("token", data.token);
-      setUsername("Sankalp");
+      setUsername(data.username);
       let devices = [];
       for (var i = 0; i < data.device_status.length; i++) {
         const device_details = await fetch(
@@ -583,8 +583,10 @@ function App() {
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
   }, [content]);
 
+  var email;
   // Forgot Password
-  const forgotPass = () => {
+  const forgotPass = (local_email) => {
+    email = local_email;
     setSideBarItems([
       {
         title: "Forgot Password",
@@ -600,7 +602,7 @@ function App() {
   };
 
   // New Password
-  const newPass = (email) => {
+  const newPass = () => {
     setSideBarItems([
       {
         title: "New Password",
@@ -651,6 +653,7 @@ function App() {
         username={username}
         forgotPass={forgotPass}
         newPass={newPass}
+        email={email}
         homePage={homePage}
       />
     </div>

@@ -22,6 +22,7 @@ export default function ContentDisplay({
   username,
   forgotPass,
   newPass,
+  email,
   homePage,
 }) {
   const [change, setChange] = useState(-1); // for login/signup
@@ -50,7 +51,7 @@ export default function ContentDisplay({
     } else if (content.type === -6) {
       return <ForgotPassword newPass={newPass} />;
     } else if (content.type === -7) {
-      return <NewPassword homePage={homePage} />;
+      return <NewPassword homePage={homePage} email={email} />;
     } else if (content.type === 1) {
       return (
         <SwitchBoard
