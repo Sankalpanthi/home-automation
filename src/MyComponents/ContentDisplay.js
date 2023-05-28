@@ -25,9 +25,9 @@ export default function ContentDisplay({
   };
 
   function callSpecific() {
-    if (content.id === -1) {
+    if (content.type === -1) {
       return <Home changeContent={changeContent} switchChange={switchChange} />;
-    } else if (content.id === -2) {
+    } else if (content.type === -2) {
       return (
         <LoginSignup
           login={login}
@@ -36,9 +36,9 @@ export default function ContentDisplay({
           switchChange={switchChange}
         />
       );
-    } else if (content.id === -3) {
+    } else if (content.type === -3) {
       return <Welcome username={username} />;
-    } else if (content.id === -4) {
+    } else if (content.type === -4) {
       return <AddDevice addDevice={addDevice} />;
     } else if (content.type === 1) {
       return (

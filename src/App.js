@@ -20,36 +20,37 @@ function App() {
     {
       title: "Home",
       icon: <HomeIcon />,
-      id: -1,
+      type: -1,
     },
     {
       title: "Signup/Login",
       icon: <LoginIcon />,
-      id: -2,
+      type: -2,
     },
   ]);
   const initContent = {
     title: "Home",
     icon: <HomeIcon />,
-    id: -1,
+    type: -1,
   };
   const [content, setContent] = useState(initContent);
   const [username, setUsername] = useState("");
 
+  // Toggling in sidebar
   const changeContent = (sideBarItem) => {
-    if (sideBarItem.id === -5) {
+    if (sideBarItem.type === -5) {
       // for logout
       if (window.confirm("Are you sure you wish to logout?")) {
         setSideBarItems([
           {
             title: "Home",
             icon: <HomeIcon />,
-            id: -1,
+            type: -1,
           },
           {
             title: "Signup/Login",
             icon: <LoginIcon />,
-            id: -2,
+            type: -2,
           },
         ]);
         setContent(initContent);
@@ -58,6 +59,8 @@ function App() {
       setContent(sideBarItem);
     }
   };
+
+  // Deleting esp
   const onDelete = async (content) => {
     const data = await fetch(
       "https://sarthak-testing-render.onrender.com/user/device/delete",
@@ -69,7 +72,7 @@ function App() {
         },
         body: JSON.stringify({
           token: localStorage.getItem("token"),
-          username: content.username,
+          username: content.espusername,
         }),
       }
     )
@@ -87,7 +90,7 @@ function App() {
       let temp = [];
       let i;
       for (i = 0; i < sideBarItems.length; i++) {
-        if (sideBarItems[i].username !== content.username) {
+        if (sideBarItems[i].espusername !== content.espusername) {
           temp.push(sideBarItems[i]);
         }
       }
@@ -96,7 +99,8 @@ function App() {
     }
   };
 
-  const addDevice = async (username, pass) => {
+  // Adding esp
+  const addDevice = async (espusername, pass) => {
     const data = await fetch(
       "https://sarthak-testing-render.onrender.com/user/device/add",
       {
@@ -107,7 +111,7 @@ function App() {
         },
         body: JSON.stringify({
           token: localStorage.getItem("token"),
-          username: username,
+          username: espusername,
           otp: pass,
         }),
       }
@@ -133,7 +137,7 @@ function App() {
           },
           body: JSON.stringify({
             token: localStorage.getItem("token"),
-            username: username,
+            username: espusername,
           }),
         }
       )
@@ -159,14 +163,14 @@ function App() {
       if (device_details.type === 1) {
         newDevices.push(
           {
-            title: "Switch " + device_no[0]++,
+            title: "SwitchBoard " + device_no[0]++,
             icon: <ToggleOnIcon />,
             type: 1,
             switch1: device_details.status_1,
             switch2: device_details.status_2,
             switch3: device_details.status_3,
             switch4: device_details.status_4,
-            username: username,
+            espusername: espusername,
             output: device_details.output,
           },
           {
@@ -175,21 +179,21 @@ function App() {
             type: 2,
             temp: device_details.status_temp,
             hum: device_details.status_hum,
-            username: username,
+            espusername: espusername,
             output: device_details.output,
           }
         );
       } else if (device_details.type === 2) {
         newDevices.push(
           {
-            title: "Switch " + device_no[0]++,
+            title: "SwitchBoard " + device_no[0]++,
             icon: <ToggleOnIcon />,
             type: 1,
             switch1: device_details.status_1,
             switch2: device_details.status_2,
             switch3: device_details.status_3,
             switch4: device_details.status_4,
-            username: username,
+            espusername: espusername,
             output: device_details.output,
           },
           {
@@ -197,7 +201,7 @@ function App() {
             icon: <DirectionsRunIcon />,
             type: 3,
             motion: device_details.status_motion,
-            username: username,
+            espusername: espusername,
             output: device_details.output,
           }
         );
@@ -209,6 +213,7 @@ function App() {
     }
   };
 
+  // Changing switches
   const onToggle = async (switch_number) => {
     if (switch_number === 1) {
       content.switch1 = !content.switch1;
@@ -219,6 +224,12 @@ function App() {
     } else {
       content.switch4 = !content.switch4;
     }
+    console.log(
+      content.switch1,
+      content.switch2,
+      content.switch3,
+      content.switch4
+    );
     const data = await fetch(
       "https://sarthak-testing-render.onrender.com/user/device",
       {
@@ -229,7 +240,7 @@ function App() {
         },
         body: JSON.stringify({
           token: localStorage.getItem("token"),
-          username: content.username,
+          username: content.espusername,
           status_1: content.switch1,
           status_2: content.switch2,
           status_3: content.switch3,
@@ -245,15 +256,23 @@ function App() {
         console.error(error);
       });
     console.log(data);
-    // let i;
-    // for (i = 1; i < sideBarItems.length - 1; i++) {
-    //   if (sideBarItems[i].username === content.username) {
-    //     sideBarItems[i] = content;
-    //     break;
-    //   }
-    // }
+    if (data.output === "device is in sync") {
+      let i;
+      for (i = 1; i < sideBarItems.length - 1; i++) {
+        if (
+          sideBarItems[i].espusername === content.espusername &&
+          sideBarItems[i].type === 1
+        ) {
+          sideBarItems[i] = content;
+          break;
+        }
+      }
+    } else {
+      alert(data.output);
+    }
   };
 
+  // Logging in
   const login = async (email, pass) => {
     // check if email id and pass are correct
     const data = await fetch(
@@ -310,14 +329,14 @@ function App() {
           });
         if (device_details.type === 1) {
           devices.push({
-            title: "Switch " + device_no[0]++,
+            title: "SwitchBoard " + device_no[0]++,
             icon: <ToggleOnIcon />,
             type: 1,
             switch1: device_details.status_1,
             switch2: device_details.status_2,
             switch3: device_details.status_3,
             switch4: device_details.status_4,
-            username: data.device_status[i],
+            espusername: data.device_status[i],
             output: device_details.output,
           });
           devices.push({
@@ -326,19 +345,19 @@ function App() {
             type: 2,
             temp: device_details.status_temp,
             hum: device_details.status_hum,
-            username: data.device_status[i],
+            espusername: data.device_status[i],
             output: device_details.output,
           });
         } else if (device_details.type === 2) {
           devices.push({
-            title: "Switch " + device_no[0]++,
+            title: "SwitchBoard " + device_no[0]++,
             icon: <ToggleOnIcon />,
             type: 1,
             switch1: device_details.status_1,
             switch2: device_details.status_2,
             switch3: device_details.status_3,
             switch4: device_details.status_4,
-            username: data.device_status[i],
+            espusername: data.device_status[i],
             output: device_details.output,
           });
           devices.push({
@@ -346,7 +365,7 @@ function App() {
             icon: <DirectionsRunIcon />,
             type: 3,
             motion: device_details.status_motion,
-            username: data.device_status[i],
+            espusername: data.device_status[i],
             output: device_details.output,
           });
         }
@@ -355,28 +374,29 @@ function App() {
         {
           title: "Welcome",
           icon: <WavingHandIcon />,
-          id: -3,
+          type: -3,
         },
         ...devices,
         {
           title: "Add Device",
           icon: <AddCircleOutlineIcon />,
-          id: -4,
+          type: -4,
         },
         {
           title: "Logout",
           icon: <LogoutIcon />,
-          id: -5,
+          type: -5,
         },
       ]);
       setContent({
         title: "Welcome",
         icon: <WavingHandIcon />,
-        id: -3,
+        type: -3,
       });
     }
   };
 
+  // Registeration
   const register = async (name, email, pass) => {
     // check if email isn't already in use
     const check = await fetch(
@@ -415,34 +435,121 @@ function App() {
         {
           title: "Welcome",
           icon: <HomeIcon />,
-          id: -3,
+          type: -3,
         },
         {
           title: "Add Device",
           icon: <AddCircleOutlineIcon />,
-          id: -4,
+          type: -4,
         },
         {
           title: "Logout",
           icon: <LogoutIcon />,
-          id: -5,
+          type: -5,
         },
       ]);
       setContent({
         title: "Welcome",
         icon: <WavingHandIcon />,
-        id: -3,
+        type: -3,
       });
     }
   };
 
+  // 1 second delay time function
   useEffect(() => {
-    const interval = setInterval(() => {
-      console.log("Logs every minute");
-    }, 1000);
+    const interval = setInterval(async () => {
+      if (content.espusername !== undefined) {
+        console.log("In 5sec");
+        const device_details = await fetch(
+          "https://sarthak-testing-render.onrender.com/user/device",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "*/*",
+            },
+            body: JSON.stringify({
+              token: localStorage.getItem("token"),
+              username: content.espusername,
+            }),
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            return data;
+          })
+          .catch((error) => {
+            console.error(error);
+            alert("hey");
+          });
+        console.log("device detail:", device_details);
+        let changedDevices = [];
+        if (device_details.type === 1) {
+          changedDevices.push(
+            {
+              type: 1,
+              switch1: device_details.status_1,
+              switch2: device_details.status_2,
+              switch3: device_details.status_3,
+              switch4: device_details.status_4,
+              espusername: content.espusername,
+              output: device_details.output,
+            },
+            {
+              type: 2,
+              temp: device_details.status_temp,
+              hum: device_details.status_hum,
+              espusername: content.espusername,
+              output: device_details.output,
+            }
+          );
+        } else if (device_details.type === 2) {
+          changedDevices.push(
+            {
+              type: 1,
+              switch1: device_details.status_1,
+              switch2: device_details.status_2,
+              switch3: device_details.status_3,
+              switch4: device_details.status_4,
+              espusername: content.espusername,
+              output: device_details.output,
+            },
+            {
+              type: 3,
+              motion: device_details.status_motion,
+              espusername: content.espusername,
+              output: device_details.output,
+            }
+          );
+        }
+        let i;
+        for (i = 1; i < sideBarItems.length - 2; i++) {
+          if (sideBarItems[i].espusername === changedDevices[0].espusername) {
+            for (let j = 0; j < changedDevices.length; j++) {
+              if (sideBarItems[i].type === changedDevices[j].type) {
+                if (changedDevices[j].type === 1) {
+                  sideBarItems[i].switch1 = changedDevices[j].switch1;
+                  sideBarItems[i].switch2 = changedDevices[j].switch2;
+                  sideBarItems[i].switch3 = changedDevices[j].switch3;
+                  sideBarItems[i].switch4 = changedDevices[j].switch4;
+                } else if (changedDevices[j].type === 2) {
+                  sideBarItems[i].temp = changedDevices[j].temp;
+                  sideBarItems[i].hum = changedDevices[j].hum;
+                } else if (changedDevices[j].type === 3) {
+                  sideBarItems[i].motion = changedDevices[j].motion;
+                }
+                sideBarItems[i].output = changedDevices[j].output;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }, 5000);
 
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-  }, []);
+  }, [content]);
 
   return (
     <div className="App">

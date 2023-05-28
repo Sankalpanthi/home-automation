@@ -5,7 +5,7 @@ export default function MotionSensor({ content, onDelete }) {
   return (
     <div className="container">
       <h1 className="heading">MotionSensor</h1>
-      <h2 className="heading2">Esp Username: {content.username}</h2>
+      <h2 className="heading2">Esp Username: {content.espusername}</h2>
       <h2 className="heading2">{content.output}</h2>
       {content.motion === 1 ? (
         <h2 className="heading2">Motion detected!</h2>

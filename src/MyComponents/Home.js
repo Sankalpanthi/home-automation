@@ -15,7 +15,7 @@ export default function Home({ changeContent, switchChange }) {
             changeContent({
               title: "Signup/Login",
               icon: <LoginIcon />,
-              id: -2,
+              type: -2,
             });
             switchChange(-1);
           }}
@@ -28,7 +28,7 @@ export default function Home({ changeContent, switchChange }) {
             changeContent({
               title: "Signup/Login",
               icon: <LoginIcon />,
-              id: -2,
+              type: -2,
             });
             switchChange(1);
           }}
