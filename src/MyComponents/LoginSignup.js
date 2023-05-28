@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../LoginSignup.css";
 
-export default function LoginSignup({ login, register, change, switchChange }) {
+export default function LoginSignup({
+  login,
+  register,
+  change,
+  switchChange,
+  forgotPass,
+}) {
   const [lemail, setLemail] = useState("");
   const [lpass, setLpass] = useState("");
   const [rname, setRname] = useState("");
@@ -106,7 +112,9 @@ export default function LoginSignup({ login, register, change, switchChange }) {
                     />
                   </div>
                   <div className="text">
-                    <a href="#">Forgot password?</a>
+                    <a href="#" onClick={forgotPass}>
+                      Forgot password?
+                    </a>
                   </div>
                   <div className="button input-box">
                     <input type="submit" name="submit" value="Login" />

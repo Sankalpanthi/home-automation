@@ -11,11 +11,13 @@ import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import WavingHandIcon from "@mui/icons-material/WavingHand";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
+import PasswordIcon from "@mui/icons-material/Password";
 
 import React, { useEffect, useState } from "react";
 
 function App() {
   var device_no = [1, 1, 1];
+  const [flag, setFlag] = useState(1);
   const [sideBarItems, setSideBarItems] = useState([
     {
       title: "Home",
@@ -258,7 +260,7 @@ function App() {
     console.log(data);
     if (data.output === "device is in sync") {
       let i;
-      for (i = 1; i < sideBarItems.length - 1; i++) {
+      for (i = 1; i < sideBarItems.length - 2; i++) {
         if (
           sideBarItems[i].espusername === content.espusername &&
           sideBarItems[i].type === 1
@@ -268,7 +270,7 @@ function App() {
         }
       }
     } else {
-      alert(data.output);
+      console.log(data.output);
     }
   };
 
@@ -481,75 +483,156 @@ function App() {
           })
           .catch((error) => {
             console.error(error);
-            alert("hey");
           });
-        console.log("device detail:", device_details);
-        let changedDevices = [];
-        if (device_details.type === 1) {
-          changedDevices.push(
+        // console.log("device detail:", device_details);
+        if (device_details.error !== undefined) {
+          alert("Your token has become inactive,logging you out!");
+          setSideBarItems([
             {
-              type: 1,
-              switch1: device_details.status_1,
-              switch2: device_details.status_2,
-              switch3: device_details.status_3,
-              switch4: device_details.status_4,
-              espusername: content.espusername,
-              output: device_details.output,
+              title: "Home",
+              icon: <HomeIcon />,
+              type: -1,
             },
             {
-              type: 2,
-              temp: device_details.status_temp,
-              hum: device_details.status_hum,
-              espusername: content.espusername,
-              output: device_details.output,
-            }
-          );
-        } else if (device_details.type === 2) {
-          changedDevices.push(
-            {
-              type: 1,
-              switch1: device_details.status_1,
-              switch2: device_details.status_2,
-              switch3: device_details.status_3,
-              switch4: device_details.status_4,
-              espusername: content.espusername,
-              output: device_details.output,
+              title: "Signup/Login",
+              icon: <LoginIcon />,
+              type: -2,
             },
-            {
-              type: 3,
-              motion: device_details.status_motion,
-              espusername: content.espusername,
-              output: device_details.output,
-            }
-          );
-        }
-        let i;
-        for (i = 1; i < sideBarItems.length - 2; i++) {
-          if (sideBarItems[i].espusername === changedDevices[0].espusername) {
-            for (let j = 0; j < changedDevices.length; j++) {
-              if (sideBarItems[i].type === changedDevices[j].type) {
-                if (changedDevices[j].type === 1) {
-                  sideBarItems[i].switch1 = changedDevices[j].switch1;
-                  sideBarItems[i].switch2 = changedDevices[j].switch2;
-                  sideBarItems[i].switch3 = changedDevices[j].switch3;
-                  sideBarItems[i].switch4 = changedDevices[j].switch4;
-                } else if (changedDevices[j].type === 2) {
-                  sideBarItems[i].temp = changedDevices[j].temp;
-                  sideBarItems[i].hum = changedDevices[j].hum;
-                } else if (changedDevices[j].type === 3) {
-                  sideBarItems[i].motion = changedDevices[j].motion;
+          ]);
+          setContent(initContent);
+        } else {
+          let changedDevices = [];
+          if (device_details.type === 1) {
+            changedDevices.push(
+              {
+                type: 1,
+                switch1: device_details.status_1,
+                switch2: device_details.status_2,
+                switch3: device_details.status_3,
+                switch4: device_details.status_4,
+                espusername: content.espusername,
+                output: device_details.output,
+              },
+              {
+                type: 2,
+                temp: device_details.status_temp,
+                hum: device_details.status_hum,
+                espusername: content.espusername,
+                output: device_details.output,
+              }
+            );
+          } else if (device_details.type === 2) {
+            changedDevices.push(
+              {
+                type: 1,
+                switch1: device_details.status_1,
+                switch2: device_details.status_2,
+                switch3: device_details.status_3,
+                switch4: device_details.status_4,
+                espusername: content.espusername,
+                output: device_details.output,
+              },
+              {
+                type: 3,
+                motion: device_details.status_motion,
+                espusername: content.espusername,
+                output: device_details.output,
+              }
+            );
+          }
+          let i;
+          for (i = 1; i < sideBarItems.length - 2; i++) {
+            if (sideBarItems[i].espusername === changedDevices[0].espusername) {
+              for (let j = 0; j < changedDevices.length; j++) {
+                if (sideBarItems[i].type === changedDevices[j].type) {
+                  if (changedDevices[j].type === 1) {
+                    sideBarItems[i].switch1 = changedDevices[j].switch1;
+                    sideBarItems[i].switch2 = changedDevices[j].switch2;
+                    sideBarItems[i].switch3 = changedDevices[j].switch3;
+                    sideBarItems[i].switch4 = changedDevices[j].switch4;
+                    sideBarItems[i].output = changedDevices[j].output;
+                    if (content.type === 1) {
+                      content.switch1 = changedDevices[j].switch1;
+                      content.switch2 = changedDevices[j].switch2;
+                      content.switch3 = changedDevices[j].switch3;
+                      content.switch4 = changedDevices[j].switch4;
+                    }
+                  } else if (changedDevices[j].type === 2) {
+                    sideBarItems[i].temp = changedDevices[j].temp;
+                    sideBarItems[i].hum = changedDevices[j].hum;
+                    if (content.type === 2) {
+                      sideBarItems[i].temp = changedDevices[j].temp;
+                      sideBarItems[i].hum = changedDevices[j].hum;
+                    }
+                  } else if (changedDevices[j].type === 3) {
+                    sideBarItems[i].motion = changedDevices[j].motion;
+                    if (content.type === 3) {
+                      content.motion = changedDevices[j].motion;
+                    }
+                  }
+                  sideBarItems[i].output = changedDevices[j].output;
+                  content.output = changedDevices[j].output;
+                  break;
                 }
-                sideBarItems[i].output = changedDevices[j].output;
-                break;
               }
             }
           }
+          setFlag((flag) => flag + 1);
         }
       }
     }, 5000);
 
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
   }, [content]);
+
+  // Forgot Password
+  const forgotPass = () => {
+    setSideBarItems([
+      {
+        title: "Forgot Password",
+        icon: <PasswordIcon />,
+        type: -6,
+      },
+    ]);
+    setContent({
+      title: "Forgot Password",
+      icon: <PasswordIcon />,
+      type: -6,
+    });
+  };
+
+  // New Password
+  const newPass = (email) => {
+    setSideBarItems([
+      {
+        title: "New Password",
+        icon: <PasswordIcon />,
+        type: -7,
+      },
+    ]);
+    setContent({
+      title: "New Password",
+      icon: <PasswordIcon />,
+      type: -7,
+    });
+  };
+
+  // Home Page
+  const homePage = () => {
+    setSideBarItems([
+      {
+        title: "Home",
+        icon: <HomeIcon />,
+        type: -1,
+      },
+      {
+        title: "Signup/Login",
+        icon: <LoginIcon />,
+        type: -2,
+      },
+    ]);
+    setContent(initContent);
+  };
 
   return (
     <div className="App">
@@ -560,6 +643,7 @@ function App() {
       />
       <ContentDisplay
         content={content}
+        flag={flag}
         changeContent={changeContent}
         onToggle={onToggle}
         onDelete={onDelete}
@@ -567,6 +651,9 @@ function App() {
         login={login}
         register={register}
         username={username}
+        forgotPass={forgotPass}
+        newPass={newPass}
+        homePage={homePage}
       />
     </div>
   );

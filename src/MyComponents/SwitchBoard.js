@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactSwitch from "react-switch";
 import "../App.css";
 
-export default function SwitchBoard({ content, onToggle, onDelete }) {
+export default function SwitchBoard({ content, flag, onToggle, onDelete }) {
   const [checked1, setChecked1] = useState(content.switch1);
   const [checked2, setChecked2] = useState(content.switch2);
   const [checked3, setChecked3] = useState(content.switch3);
@@ -14,9 +14,10 @@ export default function SwitchBoard({ content, onToggle, onDelete }) {
       setChecked2(content.switch2);
       setChecked3(content.switch3);
       setChecked4(content.switch4);
+      console.log("reset state of switchboard is called");
     };
     resetState();
-  }, [content.switch1, content.switch2, content.switch3, content.switch4]);
+  }, [content, flag]);
 
   const handleChange = (val, switch_number) => {
     onToggle(switch_number);
